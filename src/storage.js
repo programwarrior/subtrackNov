@@ -1,0 +1,4 @@
+const DB='subtrack-v1';
+function open() { return new Promise((resolve,reject)=>{ const r=indexedDB.open(DB,1);r.onupgradeneeded=()=>r.result.createObjectStore('accounts');r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error); }); }
+export async function readAccount(account='local') { const db=await open(); return new Promise((resolve,reject)=>{const tx=db.transaction('accounts');const r=tx.objectStore('accounts').get(account);r.onsuccess=()=>resolve(r.result||{records:[],queue:[],cursor:0,conflicts:[],lastSync:null});r.onerror=()=>reject(r.error);tx.oncomplete=()=>db.close();}); }
+export async function saveAccount(account,data) {const db=await open();return new Promise((resolve,reject)=>{const tx=db.transaction('accounts','readwrite');tx.objectStore('accounts').put(data,account);tx.oncomplete=()=>{db.close();resolve();};tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);});}

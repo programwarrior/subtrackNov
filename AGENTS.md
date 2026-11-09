@@ -1,0 +1,11 @@
+# Permanent working rules
+- Preserve existing data and work. Never add demo subscriptions automatically.
+- Never commit secrets, database dumps, customer documents or browser storage.
+- Browser code must never connect to MariaDB. Only the PHP API owns database credentials.
+- Back up before database migrations and destructive restores. No production migration is automatic.
+- Sync uses per-entity versions, explicit mutations and deletion tombstones. Never replace an account with a device snapshot.
+- All API records and mutations must be scoped to the authenticated user.
+- Financial amounts use integer minor units. Dates are calendar dates, not UTC timestamps.
+- Import review is mandatory. Missing dates or amounts block confirmation. Estimates are never confirmed charges.
+- Run npm test and npm run build after meaningful changes. Document untested runtime behavior honestly.
+- Keep docs/PROJECT_STATE.md and docs/CURRENT_TASK.md current. Never declare deployment complete without verification.

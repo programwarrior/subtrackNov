@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.env*
+!.env.example
+api/config.local.php
+backups/
+*.log
+.DS_Store
+public/ocr/

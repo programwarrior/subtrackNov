@@ -1,0 +1,13 @@
+import {readdir,readFile,writeFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+const entries=await readdir('dist/assets');
+const hash=createHash('sha256');
+for(const name of [...entries].sort())hash.update(name);
+hash.update(await readFile('dist/index.html'));hash.update(await readFile('dist/sw.js'));
+const ocr=await readdir('dist/ocr');
+const assets=['./','./index.html','./icon.svg','./icon-192.png','./icon-512.png','./manifest.webmanifest',...entries.map(f=>'./assets/'+f),...ocr.map(f=>'./ocr/'+f)];
+let sw=await readFile('dist/sw.js','utf8');
+sw=sw.replace('__BUILD_ID__',hash.digest('hex').slice(0,12)).replace('__PRECACHE__',JSON.stringify(assets));
+await writeFile('dist/sw.js',sw);
+await writeFile('dist/.nojekyll','');
+console.log(`Offline cache prepared for ${assets.length} assets.`);
